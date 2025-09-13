@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/scan-watched-folder",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}
