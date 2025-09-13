@@ -17,7 +17,7 @@ export default function Home() {
   const [videoEvents, setVideoEvents] = useState<Event[]>([])
   const [videoQueue, setVideoQueue] = useState<Video[]>([])
   const [autoRun, setAutoRun] = useState(false)
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
+  const [currentVideoIndex] = useState(0)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
 
   // Load batch summary when batch changes
@@ -78,7 +78,7 @@ export default function Home() {
   const selectVideo = (video: Video) => {
     setSelectedVideo(video)
     loadVideoEvents(video.id)
-    setCurrentVideoIndex(videoQueue.findIndex(v => v.id === video.id))
+    // Note: currentVideoIndex is available for future auto-run functionality
   }
 
   // Auto-run next video functionality (for future use)
@@ -240,7 +240,6 @@ export default function Home() {
                     </div>
                     
                     <VideoPlayer
-                      videoId={selectedVideo.id}
                       videoUrl={getVideoUrl(selectedVideo)}
                       events={videoEvents}
                     />

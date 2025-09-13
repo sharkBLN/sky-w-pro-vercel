@@ -13,7 +13,7 @@ export default function MultiUpload({ onBatchComplete }: MultiUploadProps) {
   const [files, setFiles] = useState<File[]>([])
   const [uploadProgress, setUploadProgress] = useState<Record<string, UploadProgress>>({})
   const [isUploading, setIsUploading] = useState(false)
-  const [batchId, setBatchId] = useState<string | null>(null)
+  const [currentBatchId, setCurrentBatchId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   const handleFileSelect = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,14 +72,16 @@ export default function MultiUpload({ onBatchComplete }: MultiUploadProps) {
       }
 
       const { batchId: newBatchId, videos, signedUrls } = await response.json()
-      setBatchId(newBatchId)
+      setCurrentBatchId(newBatchId)
 
       // Initialize progress tracking
       const initialProgress: Record<string, UploadProgress> = {}
       videos.forEach((video: Record<string, unknown>) => {
-        initialProgress[video.id] = {
-          fileId: video.id,
-          filename: video.filename,
+        const videoId = video.id as string
+        const videoFilename = video.filename as string
+        initialProgress[videoId] = {
+          fileId: videoId,
+          filename: videoFilename,
           status: 'queued',
           progress: 0
         }
@@ -89,7 +91,7 @@ export default function MultiUpload({ onBatchComplete }: MultiUploadProps) {
       // Upload files in parallel
       const uploadPromises = signedUrls.map(async (urlInfo: Record<string, unknown>, index: number) => {
         const file = files[index]
-        const videoId = urlInfo.videoId
+        const videoId = urlInfo.videoId as string
 
         try {
           // Update to uploading status
@@ -99,7 +101,7 @@ export default function MultiUpload({ onBatchComplete }: MultiUploadProps) {
           }))
 
           // Upload file with progress tracking
-          await uploadWithProgress(file, urlInfo.uploadUrl, (progress) => {
+          await uploadWithProgress(file, urlInfo.uploadUrl as string, (progress) => {
             setUploadProgress(prev => ({
               ...prev,
               [videoId]: { ...prev[videoId], progress }
@@ -206,7 +208,7 @@ export default function MultiUpload({ onBatchComplete }: MultiUploadProps) {
   const clearAll = () => {
     setFiles([])
     setUploadProgress({})
-    setBatchId(null)
+    setCurrentBatchId(null)
     setError(null)
   }
 

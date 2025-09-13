@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
       }
 
       // Process each file (placeholder logic)
-      for (const _file of foundFiles) {
+      for (let i = 0; i < foundFiles.length; i++) {
         // In real implementation:
         // - Upload file to Supabase storage
-        // - Create video record
+        // - Create video record  
         // - Start analysis
         processedCount++
       }

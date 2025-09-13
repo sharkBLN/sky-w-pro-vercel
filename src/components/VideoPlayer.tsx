@@ -6,12 +6,11 @@ import { Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react'
 import { Event } from '@/types'
 
 interface VideoPlayerProps {
-  videoId: string
   videoUrl: string
   events: Event[]
 }
 
-export default function VideoPlayer({ videoId, videoUrl, events }: VideoPlayerProps) {
+export default function VideoPlayer({ videoUrl, events }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
